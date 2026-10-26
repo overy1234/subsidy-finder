@@ -1,0 +1,47 @@
+:root {
+  font-family: sans-serif;
+  color: #191f28;
+  color-scheme: light;
+  background: #ffffff;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #ffffff;
+}
+
+#root {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: #ffffff;
+}
+
+/* 태블릿·데스크톱: 가운데 정렬된 앱 영역 + 바깥 회색 */
+@media (min-width: 600px) {
+  body {
+    background: #f2f4f6;
+  }
+
+  #root {
+    max-width: var(--container, 720px);
+    box-shadow: 0 0 0 1px #e5e8eb;
+  }
+}
