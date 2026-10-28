@@ -1,4 +1,5 @@
-﻿import { api } from "../api/client";
+﻿import { Device } from "@apps-in-toss/web-framework";
+import { api } from "../api/client";
 import { benefitAmount, clean } from "../api/format";
 import type { Benefit } from "../api/types";
 import { AmountRow, DdayBadge, Disclaimer, ErrorView, FinanceCard } from "../components/ui";
@@ -17,8 +18,8 @@ function sections(b: Benefit) {
   };
 }
 
-/** benefit_detail — 지원사업 상세 */
-export default function DetailScreen({ benefit, onBack }: { benefit: Benefit; onBack: () => void }) {
+/** benefit_detail — 지원사업 상세. 뒤로가기는 토스 내비게이션 바가 맡는다 (App의 popstate로 닫힘) */
+export default function DetailScreen({ benefit }: { benefit: Benefit }) {
   const { data, error, loading } = useAsync(() => api.benefitDetail(benefit.service_id, benefit.source), [benefit.service_id]);
   const b = data ?? benefit;
   const s = sections(b);
@@ -26,14 +27,6 @@ export default function DetailScreen({ benefit, onBack }: { benefit: Benefit; on
 
   return (
     <section className="screen detail">
-      <nav className="topbar">
-        <button className="back" onClick={onBack} aria-label="뒤로">
-          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-      </nav>
-
       <header className="detail-header">
         <DdayBadge benefit={b} />
         <h1 className="detail-title">{b.name}</h1>
@@ -62,12 +55,17 @@ export default function DetailScreen({ benefit, onBack }: { benefit: Benefit; on
       </div>
 
       <div className="bottom-cta sticky">
-        <a className="btn btn-primary btn-block" href={b.detail_url} target="_blank" rel="noopener noreferrer">
+        <button className="btn btn-primary btn-block" onClick={() => openOriginal(b.detail_url)}>
           원문 보고 신청하기
-        </a>
+        </button>
       </div>
     </section>
   );
+}
+
+/** 토스 WebView에서는 target="_blank"가 동작하지 않아 SDK로 기본 브라우저를 연다 (공공기관 원문 링크는 오픈 정책상 허용) */
+function openOriginal(url: string) {
+  Device.openURL(url).catch(() => window.open(url, "_blank", "noopener,noreferrer"));
 }
 
 function DetailBlock({ title, body }: { title: string; body?: string | null }) {

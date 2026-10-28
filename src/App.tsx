@@ -34,8 +34,6 @@ function App() {
     setDetail(b);
     window.scrollTo(0, 0);
   };
-  const closeDetail = () => history.back();
-
   const goTab = (t: Tab) => {
     setTab(t);
     window.scrollTo(0, 0);
@@ -44,7 +42,7 @@ function App() {
   if (detail) {
     return (
       <main className="app">
-        <DetailScreen benefit={detail} onBack={closeDetail} />
+        <DetailScreen benefit={detail} />
       </main>
     );
   }
